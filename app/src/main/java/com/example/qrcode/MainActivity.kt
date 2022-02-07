@@ -21,6 +21,13 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var tvMessage:TextView
 
+    private lateinit var barcodeEncoder: BarcodeEncoder
+    private lateinit var bitmap: Bitmap
+
+    private lateinit var editText: EditText
+
+    private lateinit var text:String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -30,7 +37,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupUI() {
         val qrCodeImage = findViewById<ImageView>(R.id.iv_qr_code)
-        var text = findViewById<EditText>(R.id.et_qr_text)
+        editText = findViewById<EditText>(R.id.et_qr_text)
         var btnGenerate = findViewById<Button>(R.id.btn_qr_generate)
         val btnScan = findViewById<Button>(R.id.btn_qr_scan)
         var btnShare = findViewById<Button>(R.id.btn_qr_share)
@@ -38,16 +45,20 @@ class MainActivity : AppCompatActivity() {
         tvMessage = findViewById(R.id.tv_message)
 
 
+        try {
+            text = editText.text.toString()
+            barcodeEncoder = BarcodeEncoder()
+            bitmap = barcodeEncoder.encodeBitmap(text, BarcodeFormat.QR_CODE, 300, 300)
+        }catch(e: Exception){
+
+        }
 
         btnGenerate.setOnClickListener {
             try {
-                val barcodeEncoder = BarcodeEncoder()
-                val bitmap = barcodeEncoder.encodeBitmap(text.text.toString(), BarcodeFormat.QR_CODE, 300, 300)
+                text = editText.text.toString()
+                barcodeEncoder = BarcodeEncoder()
+                bitmap = barcodeEncoder.encodeBitmap(text, BarcodeFormat.QR_CODE, 300, 300)
                 qrCodeImage.setImageBitmap(bitmap)
-
-                getImageUri(this, bitmap)?.let {
-                    shareImage(it)
-                }
 
             }catch(e: Exception){
 
@@ -55,21 +66,29 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnScan.setOnClickListener {
-            val intentIntegrator = IntentIntegrator(this)
-            intentIntegrator.setPrompt("Scan a barcode or QR Code")
-            intentIntegrator.setOrientationLocked(true)
-            intentIntegrator.initiateScan()
+
+            try {
+                val intentIntegrator = IntentIntegrator(this)
+                intentIntegrator.setPrompt("Scan a barcode or QR Code")
+                intentIntegrator.setOrientationLocked(true)
+                intentIntegrator.initiateScan()
+            }catch(e: Exception){
+
+            }
         }
 
-
-
         btnShare.setOnClickListener {
+            try {
+                getImageUri(this, bitmap)?.let {
+                    shareImage(it)
+            }
+            }catch(e: Exception){
 
+            }
 
         }
 
     }
-
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, @Nullable data: Intent?) {
@@ -84,12 +103,15 @@ class MainActivity : AppCompatActivity() {
                 // if the intentResult is not null we'll set
                 // the content and format of scan message
                 tvMessage.setText(intentResult.contents)
-                //tvMessage.setText(intentResult.formatName)
+                text = intentResult.contents
+
+            //tvMessage.setText(intentResult.formatName)
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
     }
+
 
     fun getImageUri(inContext: Context, inImage: Bitmap): Uri? {
         val bytes = ByteArrayOutputStream()
@@ -105,8 +127,6 @@ class MainActivity : AppCompatActivity() {
         intent.type = "image/*"
         startActivity(Intent.createChooser(intent, "Share"))
     }
-
-
 
     fun shareTextWith(text: String?) {
         val intent = Intent()
