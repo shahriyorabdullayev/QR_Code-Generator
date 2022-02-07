@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:orientation="vertical"
+    android:gravity="center|top">
+
+    <ImageView
+        android:id="@+id/iv_qr_code"
+        android:layout_width="280dp"
+        android:layout_height="280dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/view_rounded_corner"/>
+
+    <EditText
+        android:id="@+id/et_qr_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter here"
+        android:padding="12dp"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginTop="16sp"
+        android:background="@drawable/view_rounded_corner"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_qr_generate"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Generate"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="16sp"
+        android:backgroundTint="#1179E8"
+        app:cornerRadius="20dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_qr_share"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Share"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="6dp"
+        android:backgroundTint="#1179E8"
+        app:cornerRadius="20dp"
+        />
+</LinearLayout>
